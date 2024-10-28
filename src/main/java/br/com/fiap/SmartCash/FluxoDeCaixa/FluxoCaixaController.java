@@ -5,6 +5,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+import br.com.fiap.SmartCash.RecomendacaoFinanceiraIA.RecomendacaoFinanceiraIAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +22,16 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("fluxoCaixa")
 @Tag(name = "Fluxo de Caixa", description = "Endpoint relacionado com Fluxo de Caixa")
 public class FluxoCaixaController {
+
+    @Autowired
+    RecomendacaoFinanceiraIAService rfiS;
 
     @Autowired
     FluxoCaixaRepository repository;
@@ -84,6 +91,23 @@ public class FluxoCaixaController {
     private FluxoCaixa verificarSeExisteFluxoCaixa(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Fluxo de Caixa não encontrado"));
+    }
+
+    @GetMapping("/recomendacaoIA")
+    public String recomendacaoFinanceira(@RequestParam String dataInclusao, @RequestParam Long idEmpresa){
+        StringBuilder requestChat = new StringBuilder();
+        List<FluxoCaixa> lista;
+        lista = repository.teste(dataInclusao, idEmpresa);
+
+        for (FluxoCaixa fluxoCaixa : lista) {
+            requestChat.append("Fluxo de caixa:")
+                    .append(fluxoCaixa.getDESCRICAO())
+                    .append("\nTipo:")
+                    .append(fluxoCaixa.getTIPO())
+                    .append("\nValor:").append(fluxoCaixa.getVALOR()).append("\n");
+        }
+        System.out.println(requestChat);
+        return rfiS.sendChatMessage(requestChat);
     }
 
 }
