@@ -18,7 +18,6 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
                 auth
-                        .requestMatchers(HttpMethod.GET, "/empresa").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/usuario/novaSenha").permitAll()
                         .requestMatchers(HttpMethod.POST,"/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/usuario").permitAll()
@@ -32,7 +31,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/webjars/**").permitAll() 
                         .requestMatchers("/docs").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
         );
         http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
