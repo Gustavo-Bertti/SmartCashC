@@ -11,9 +11,10 @@
 ### Rodar aplicação
     1 - Clonar o repositório para máquina local
     2 - Abrir o projeto
-    3 - Abrir docker desktop
-    4 - Digitar docker compose up --build    
-    5 - Rodar a aplicação 
+    3 - Substituir variavel OPEN_AI_KEY no application properties pela chave de API da OPEN AI
+    4 - Abrir docker desktop
+    5 - Digitar docker compose up --build no terminal do projeto 
+    6 - Rodar a aplicação 
  
 #### Diagrama entidade relacionamento
 ![alt text](Documentos/Diagramas/DER.png)
